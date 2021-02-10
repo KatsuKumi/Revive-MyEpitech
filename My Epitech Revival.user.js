@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         My Epitech Revival
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.31
 // @description  Restauration des % de mouli
 // @author       You
 // @run-at       document-start
+// @updateURL    https://github.com/KatsuKumi/Revive-MyEpitech/raw/master/My%20Epitech%20Revival.user.js
+// @downloadURL  https://github.com/KatsuKumi/Revive-MyEpitech/raw/master/My%20Epitech%20Revival.user.js
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.min.js
