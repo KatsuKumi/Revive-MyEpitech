@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         My Epitech Revival
 // @namespace    http://tampermonkey.net/
-// @version      0.31
+// @version      0.4
 // @description  Restauration des % de mouli
 // @author       You
 // @run-at       document-start
@@ -30,7 +30,10 @@ function addGlobalStyle(css) {
     head.appendChild(style);
 }
 
-addGlobalStyle(".nanobar { width: 100%; height: 10px; z-index: 9999; top:0 } .project-bar>.bar { height: 100%; transition: height .3s; background:#32cd32;}");
+addGlobalStyle(".nanobar { width: 100%; height: 10px; z-index: 9999; top:0 }");
+addGlobalStyle(".project-bar-green>.bar { height: 100%; transition: height .3s; background:#2bd41c;}")
+addGlobalStyle(".project-bar-orange>.bar { height: 100%; transition: height .3s; background:#d48d1c;}")
+addGlobalStyle(".project-bar-red>.bar { height: 100%; transition: height .3s; background:#ae1010;}")
 
 function get_percent(name) {
     var percent_i = 0;
@@ -59,6 +62,15 @@ function process_project(project) {
     project_percent.push({"name" : project.project.name, "percent" : percent});
 }
 
+function find_color(pourcent) {
+    if (pourcent < 25.0)
+        return 'project-bar-red';
+    else if (pourcent < 75.0)
+        return 'project-bar-orange';
+    else
+        return 'project-bar-green';
+}
+
 
 const origOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function() {
@@ -83,8 +95,9 @@ function start() {
             var name = $($($($($( this ).children()[0]).children()[0]).children()[0]).children()[0]).text();
             $($($($($( this ).children()[0]).children()[0]).children()[0]).children()[0]).html(name + " : " + get_percent(name) + "%");
             console.log(index + ": " + name);
+            console.log(find_color(name) + " : " + name);
             var options = {
-                classname: 'project-bar',
+                classname: find_color(get_percent(name)),
                 target: this
             };
             var nanobar = new Nanobar( options );
