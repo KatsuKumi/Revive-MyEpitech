@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         My Epitech Revival
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  Restauration des % de mouli
 // @author       You
 // @run-at       document-start
@@ -75,33 +75,56 @@ function find_color(pourcent) {
 const origOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function() {
     this.addEventListener('load', function() {
-        if (this.responseURL.startsWith("https://api.epitest.eu/me/")) {
+        if (this.responseURL.startsWith("https://api.epitest.eu/me/20")) {
             started = 0;
             console.log("#####################REQUEST####################");
             var json = JSON.parse(this.responseText,null,2);
             total_project = json.length;
             json.forEach(project => process_project(project));
         }
+        if (this.responseURL.startsWith("https://api.epitest.eu/me/details")) {
+            started = 0;
+        }
     });
     origOpen.apply(this, arguments);
 };
 
-waitForKeyElements(".project-cell", start);
+waitForKeyElements(".mdl-typography--text-left", start);
 function start() {
     if (started == 0) {
         console.log("#####################STARTED####################");
+        console.log(project_percent);
         started = 1;
-        $( ".project-cell" ).each(function( index ) {
-            var name = $($($($($( this ).children()[0]).children()[0]).children()[0]).children()[0]).text();
-            $($($($($( this ).children()[0]).children()[0]).children()[0]).children()[0]).html(name + " : " + get_percent(name) + "%");
-            console.log(index + ": " + name);
-            console.log(find_color(name) + " : " + name);
+
+        if ($(".lint-details")[0]) { // On details page
+            var cell = $( ".project-cell" )[0];
+            var div = $(cell).children()[0];
+            var name = $($(".mdl-typography--text-left")[0]).text();
+            $($(".mdl-typography--text-left")[0]).text(name + " : " + get_percent(name) + "%");
+            console.log($(cell).children[0]);
             var options = {
                 classname: find_color(get_percent(name)),
-                target: this
+                target: div
             };
             var nanobar = new Nanobar( options );
             nanobar.go(get_percent(name));
-        });
+            $(div).css("padding", "0");
+            console.log($($(div).children()[1])[0]);
+            $($(div).children()[1]).css({"padding-left": "1%", "padding-right": "1%", "padding-top": "1%", "width": "98%"});
+            $($(div).children()[2]).css({"padding-left": "1%", "padding-right": "1%", "width": "98%"});
+        } else { // On list page
+            $( ".project-cell" ).each(function( index ) {
+                var name = $($($($($( this ).children()[0]).children()[0]).children()[0]).children()[0]).text();
+                $($($($($( this ).children()[0]).children()[0]).children()[0]).children()[0]).html(name + " : " + get_percent(name) + "%");
+                console.log(index + ": " + name);
+                console.log(find_color(name) + " : " + name);
+                var options = {
+                    classname: find_color(get_percent(name)),
+                    target: this
+                };
+                var nanobar = new Nanobar( options );
+                nanobar.go(get_percent(name));
+            });
+        }
     }
 }
