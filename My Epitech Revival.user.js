@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         My Epitech Revival
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  Restauration des % de mouli
 // @author       You
 // @run-at       document-start
@@ -75,7 +75,7 @@ function find_color(pourcent) {
 const origOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function() {
     this.addEventListener('load', function() {
-        if (this.responseURL == "https://api.epitest.eu/me/2020") {
+        if (this.responseURL.startsWith("https://api.epitest.eu/me/")) {
             started = 0;
             console.log("#####################REQUEST####################");
             var json = JSON.parse(this.responseText,null,2);
