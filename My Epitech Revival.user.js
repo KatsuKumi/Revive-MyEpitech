@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         My Epitech Revival
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7
 // @description  Restauration des % de mouli
 // @author       You
 // @run-at       document-start
@@ -120,10 +120,17 @@ function start() {
                 console.log(find_color(name) + " : " + name);
                 var options = {
                     classname: find_color(get_percent(name)),
-                    target: this
+                    target: $(this).children()[0]
                 };
                 var nanobar = new Nanobar( options );
                 nanobar.go(get_percent(name));
+                var indexproj = 0;
+                $.each(project_percent, function(i){
+                    if(project_percent[i].name === name) {
+                        indexproj = i;
+                    }
+                });
+                project_percent.splice(indexproj,1);
             });
         }
     }
